@@ -110,7 +110,7 @@ function Activate()
   GameRules.maxFood = STARTING_MAX_FOOD
   GameRules.playerTeamChoices = {}
   GameRules.dcedChoosers = {}
-  GameRules.trollTps = {Vector(-320,0,256),Vector(0,0,256),Vector(320,0,256),Vector(-320,-320,256),Vector(0,-320,256),Vector(320,-320,256),Vector(-320,-640,256),Vector(0,-640,256),Vector(320,-640,256)}
+  GameRules.trollTps = {Vector(0,32,256)} --{Vector(-320,0,256),Vector(0,0,256),Vector(320,0,256),Vector(-320,-320,256),Vector(0,-320,256),Vector(320,-320,256),Vector(-320,-640,256),Vector(0,-640,256),Vector(320,-640,256)}
   GameRules.angel_spawn_points = Entities:FindAllByName("angel_spawn_point")
   GameRules.shops = Entities:FindAllByClassname("trigger_shop")
   GameRules.startTime = nil

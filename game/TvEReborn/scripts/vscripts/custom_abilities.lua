@@ -2,41 +2,53 @@ require('libraries/util')
 
 --Ability for tents to give gold
 function GainGoldCreate(event)
-	local caster = event.caster
-	local hero = caster:GetOwner()				
-	if not hero then
-		return
+	if IsServer() then
+		local caster = event.caster
+		local hero = caster:GetOwner()				
+		if not hero then
+			return
+		end
+		local level = caster:GetLevel()
+		local amountPerSecond = 2^(level-1) * GameRules.MapSpeed
+		hero.goldPerSecond = hero.goldPerSecond + amountPerSecond
+		local dataTable = { entityIndex = caster:GetEntityIndex(), amount = amountPerSecond, interval = 1 } --statusAnim = GameRules.PlayersFPS[playerID]
+		CustomGameEventManager:Send_ServerToTeam(caster:GetTeamNumber(), "gold_gain_start", dataTable)
 	end
-	local level = caster:GetLevel()
-	local amountPerSecond = 2^(level-1) * GameRules.MapSpeed
-	hero.goldPerSecond = hero.goldPerSecond + amountPerSecond
-	local dataTable = { entityIndex = caster:GetEntityIndex(), amount = amountPerSecond, interval = 1 }
-	CustomGameEventManager:Send_ServerToTeam(caster:GetTeamNumber(), "gold_gain_start", dataTable)
 end
 
 function GainGoldDestroy(event)
-	local caster = event.caster
-	local hero = caster:GetOwner()				
-	local level = caster:GetLevel()
-	local amountPerSecond = 2^(level-1) * GameRules.MapSpeed
-	hero.goldPerSecond = hero.goldPerSecond - amountPerSecond
-	local dataTable = { entityIndex = caster:GetEntityIndex() }
-	CustomGameEventManager:Send_ServerToTeam(caster:GetTeamNumber(), "gold_gain_stop", dataTable)
+	if IsServer() then
+		local caster = event.caster
+		local hero = caster:GetOwner()
+		if not hero then
+			return
+		end						
+		local level = caster:GetLevel()
+		local amountPerSecond = 2^(level-1) * GameRules.MapSpeed
+		if not hero.goldPerSecond then
+			return
+		end
+		hero.goldPerSecond = hero.goldPerSecond - amountPerSecond
+		local dataTable = { entityIndex = caster:GetEntityIndex() }
+		CustomGameEventManager:Send_ServerToTeam(caster:GetTeamNumber(), "gold_gain_stop", dataTable)
+	end
 end
 
 function GainGoldTeamThinker(event)
-	if event.caster then
-		local caster = event.caster
-		local level = caster:GetLevel()
-		local amount = 2^(level-1) * GameRules.MapSpeed
-		for i=1,PlayerResource:GetPlayerCountForTeam(caster:GetTeamNumber()) do
-			local playerID = PlayerResource:GetNthPlayerIDOnTeam(caster:GetTeamNumber(), i)
-			local hero = PlayerResource:GetSelectedHeroEntity(playerID) or false
-			if hero then
-				PlayerResource:ModifyGold(hero,amount)
+	if IsServer() then
+		if event.caster then
+			local caster = event.caster
+			local level = caster:GetLevel()
+			local amount = 2^(level-1) * GameRules.MapSpeed
+			for i=1,PlayerResource:GetPlayerCountForTeam(caster:GetTeamNumber()) do
+				local playerID = PlayerResource:GetNthPlayerIDOnTeam(caster:GetTeamNumber(), i)
+				local hero = PlayerResource:GetSelectedHeroEntity(playerID) or false
+				if hero then
+					PlayerResource:ModifyGold(hero,amount)
+				end
 			end
+			PopupGoldGain(caster,amount)
 		end
-		PopupGoldGain(caster,amount)
 	end
 end
 
@@ -45,313 +57,368 @@ function RevealArea( event )
 
 	local caster = event.caster
 	local point = event.target_points[1]
-	local visionRadius = string.match(GetMapName(),"winter") and event.Radius*1.75 or event.Radius
+	--local visionRadius = string.match(GetMapName(),"winter") and event.Radius*1.75 or event.Radius
+	local visionRadius = event.Radius
 	local visionDuration = event.Duration
 	AddFOWViewer(caster:GetTeamNumber(), point, visionRadius, visionDuration, false)
 	local units = FindUnitsInRadius(caster:GetTeamNumber(), point , nil, visionRadius , DOTA_UNIT_TARGET_TEAM_BOTH, DOTA_UNIT_TARGET_ALL , DOTA_UNIT_TARGET_FLAG_NONE, 0 , false)
 	local timeElapsed = 0
-	Timers:CreateTimer(0.03,function()
-		for _,unit in pairs(units) do
-			if unit:HasModifier("modifier_invisible") then
-				unit:RemoveModifierByName("modifier_invisible")
-			end
-		end
-		timeElapsed = timeElapsed + 0.03
-		if timeElapsed < visionDuration then
-			return 0.03
-		end
-	end)
 end
+function RevealAreaItem( event )
+	event.Radius = event.Radius -- /GameRules.MapSpeed
+	RevealArea(event)
+	local item = event.ability
+	item:Use()
+end	
 
 function TeleportTo (event)
 	local caster = event.caster
 	for i=1,#GameRules.trollTps do
-		local units = FindUnitsInRadius(caster:GetTeamNumber(), GameRules.trollTps[i] , nil, 150 , DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_HERO , DOTA_UNIT_TARGET_FLAG_NONE, 0 , false)
-		if #units == 0 then
-			FindClearSpaceForUnit( caster , GameRules.trollTps[i] , true )
-			break
-		end
+		FindClearSpaceForUnit( caster , GameRules.trollTps[i] , true )
 	end
 end
 
 function GoldOnAttack (event)
-	local caster = event.caster
-	local dmg = math.floor(event.DamageDealt) * GameRules.MapSpeed
-	PlayerResource:ModifyGold(caster,dmg)
-	PopupGoldGain(caster,dmg)
-	local target = event.unit
-	caster.attackTarget = target:GetEntityIndex()
-	target.attackers = target.attackers or {}
-	target.attackers[caster:GetEntityIndex()] = true
-
+	if IsServer()
+		local caster = event.caster
+		local dmg = math.floor(event.DamageDealt) * GameRules.MapSpeed
+		PlayerResource:ModifyGold(caster,dmg)
+		PopupGoldGain(caster,dmg)
+		local target = event.unit
+		caster.attackTarget = target:GetEntityIndex()
+		target.attackers = target.attackers or {}
+		target.attackers[caster:GetEntityIndex()] = true
+	end
 end
 
 function ExchangeLumber(event)
-	local caster = event.caster
-	local playerID = caster:GetMainControllingPlayer()
-	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
-	local amount = event.Amount
+	if IsServer() then
+		local caster = event.caster
+		local playerID = caster:GetMainControllingPlayer()
+		local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+		local amount = event.Amount
+		local price = 0
+		local increasePrice = 0
+		for a = 10,math.abs(amount),10 do
+			price = price + GameRules.lumberPrice + increasePrice
+			if amount > 0 then
+				increasePrice = increasePrice + 5
+			else
+				if GameRules.lumberPrice + increasePrice - 5 > 10 then
+					increasePrice = increasePrice - 5
+				end
+			end
+		end
 
-	local price = 0
-	local increasePrice = 0
-	for a = 10,math.abs(amount),10 do
-		price = price + GameRules.lumberPrice + increasePrice
+		--Buy wood
 		if amount > 0 then
-			increasePrice = increasePrice + 5
+			DebugPrint("Buying " .. amount .. " wood for " .. price .. " gold!")
+			if price > PlayerResource:GetGold(playerID) then
+				SendErrorMessage(playerID, "#error_not_enough_gold")
+				return false
+			else
+				PlayerResource:ModifyGold(hero,-price,true)
+				PlayerResource:ModifyLumber(hero,amount,true)
+				ModifyLumberPrice(increasePrice)
+				PopupGoldGain(caster,math.floor(price),false)
+				PopupLumber(caster,math.floor(amount),true)
+			end
+		--Sell wood
 		else
-			if GameRules.lumberPrice + increasePrice - 5 > 10 then
-				increasePrice = increasePrice - 5
+			amount = -amount
+			price = price + increasePrice
+			DebugPrint("Selling " .. amount .. " wood for " .. price .. " gold!")
+			if amount > PlayerResource:GetLumber(playerID) then
+				SendErrorMessage(playerID, "#error_not_enough_lumber")
+				return false
+			else
+				PlayerResource:ModifyGold(hero,price)
+				PlayerResource:ModifyLumber(hero,-amount)
+				ModifyLumberPrice(increasePrice)
+				PopupGoldGain(caster,math.floor(price),true)
+				PopupLumber(caster,math.floor(amount),false)
 			end
 		end
 	end
-
-	--Buy wood
-	if amount > 0 then
-		DebugPrint("Buying " .. amount .. " wood for " .. price .. " gold!")
-		if price > PlayerResource:GetGold(playerID) then
-            SendErrorMessage(playerID, "#error_not_enough_gold")
-            return false
-        else
-        	PlayerResource:ModifyGold(hero,-price)
-        	PlayerResource:ModifyLumber(hero,amount)
-        	ModifyLumberPrice(increasePrice)
-        	PopupGoldGain(caster,math.floor(price),false)
-        	PopupLumber(caster,math.floor(amount),true)
-        end
-	--Sell wood
-	else
-		amount = -amount
-		price = price + increasePrice
-		DebugPrint("Selling " .. amount .. " wood for " .. price .. " gold!")
-		if amount > PlayerResource:GetLumber(playerID) then
-            SendErrorMessage(playerID, "#error_not_enough_lumber")
-            return false
-		else
-			PlayerResource:ModifyGold(hero,price)
-			PlayerResource:ModifyLumber(hero,-amount)
-        	ModifyLumberPrice(increasePrice)
-        	PopupGoldGain(caster,math.floor(price),true)
-        	PopupLumber(caster,math.floor(amount),false)
-		end
-	end
-
 end
 
 function SpawnUnitOnSpellStart(event)
-	local caster = event.caster
-	local playerID = caster:GetMainControllingPlayer()
-	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
-	local ability = event.ability
-	local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
-	local gold_cost = ability:GetSpecialValueFor("gold_cost")
-	local lumber_cost = ability:GetSpecialValueFor("lumber_cost")
-	local food = ability:GetSpecialValueFor("food_cost")
-	PlayerResource:ModifyGold(hero,-gold_cost)
-	PlayerResource:ModifyLumber(hero,-lumber_cost)
-	PlayerResource:ModifyFood(hero,food)
-    if PlayerResource:GetGold(playerID) < 0 then
-        SendErrorMessage(playerID, "#error_not_enough_gold")
-        caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
-        return false
-    end
-    if PlayerResource:GetLumber(playerID) < 0 then
-        SendErrorMessage(playerID, "#error_not_enough_lumber")
-        caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
-        return false
-    end
-    if hero.food > GameRules.maxFood then
-        SendErrorMessage(playerID, "#error_not_enough_food")
-        caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
-        return false
-    end
+	if IsServer() then
+		local caster = event.caster
+		local playerID = caster:GetMainControllingPlayer()
+		local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+		local ability = event.ability
+		local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
+		local gold_cost = ability:GetSpecialValueFor("gold_cost")
+		local lumber_cost = ability:GetSpecialValueFor("lumber_cost")
+		local food = ability:GetSpecialValueFor("food_cost")
+		PlayerResource:ModifyGold(hero,-gold_cost)
+		PlayerResource:ModifyLumber(hero,-lumber_cost)
+		PlayerResource:ModifyFood(hero,food)
+		if PlayerResource:GetGold(playerID) < 0 then
+			SendErrorMessage(playerID, "#error_not_enough_gold")
+			caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
+			return false
+		end
+		if PlayerResource:GetLumber(playerID) < 0 then
+			SendErrorMessage(playerID, "#error_not_enough_lumber")
+			caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
+			return false
+		end
+		if hero.food > GameRules.maxFood then
+			SendErrorMessage(playerID, "#error_not_enough_food")
+			caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
+			return false
+		end
+	end
 end
 
 function SpawnUnitOnChannelSucceeded(event)
-	local caster = event.caster
-	local ability = event.ability
-	local playerID = caster:GetPlayerOwnerID()
-	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
-	local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
-	local unit_count = ability:GetSpecialValueFor("unit_count")
-	for a = 1,unit_count do
-		local unit = CreateUnitByName(unit_name, caster:GetAbsOrigin() , true, nil, nil, hero:GetTeamNumber())
-		unit:AddNewModifier(unit,nil,"modifier_phased",{duration = 0.03})
-        unit:SetOwner(hero)
-        table.insert(hero.units,unit)
-        unit:SetControllableByPlayer(playerID, true)
+	if IsServer() then
+		local caster = event.caster
+		local ability = event.ability
+		local playerID = caster:GetPlayerOwnerID()
+		local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+		local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
+		local unit_count = ability:GetSpecialValueFor("unit_count")
+		for a = 1,unit_count do
+			local unit = CreateUnitByName(unit_name, caster:GetAbsOrigin() , true, nil, nil, hero:GetTeamNumber())
+			unit:AddNewModifier(unit,nil,"modifier_phased",{duration = 0.03})
+			unit:SetOwner(hero)
+			table.insert(hero.units,unit)
+			unit:SetControllableByPlayer(playerID, true)
+
+			--updateskin
+			--lifetimer
+
+			if string.match(unit_name,"%a+") == "worker" then
+				ABILITY_Repair = unit:FindAbilityByName("repair")
+				ABILITY_Repair:ToggleAutoCast()
+			end
+		end
 	end
 end
 
 function SpawnUnitOnChannelInterrupted(event)
-	local caster = event.caster
-	local playerID = caster:GetPlayerOwnerID()
-	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
-	local ability = event.ability
-	local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
-	local gold_cost = ability:GetSpecialValueFor("gold_cost")
-	local lumber_cost = ability:GetSpecialValueFor("lumber_cost")
-	local food = ability:GetSpecialValueFor("food_cost")
-	PlayerResource:ModifyGold(hero,gold_cost)
-	PlayerResource:ModifyLumber(hero,lumber_cost)
-	PlayerResource:ModifyFood(hero,-food)
-
+	if IsServer() then
+		local caster = event.caster
+		local playerID = caster:GetPlayerOwnerID()
+		local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+		local ability = event.ability
+		local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
+		local gold_cost = ability:GetSpecialValueFor("gold_cost")
+		local lumber_cost = ability:GetSpecialValueFor("lumber_cost")
+		local food = ability:GetSpecialValueFor("food_cost")
+		PlayerResource:ModifyGold(hero,gold_cost)
+		PlayerResource:ModifyLumber(hero,lumber_cost)
+		PlayerResource:ModifyFood(hero,-food)
+		--minecost modify
+	end
 end
-
 
 THINK_INTERVAL = 0.5
 
-
 function Repair(event)
-	local args = {}
-    args.PlayerID = event.caster:GetPlayerOwnerID()
-    args.targetIndex = event.target:GetEntityIndex()
-    args.queue = false
-	BuildingHelper:RepairCommand(args)
+	if IsServer() then
+		local args = {}
+		args.PlayerID = event.caster:GetPlayerOwnerID()
+		args.targetIndex = event.target:GetEntityIndex()
+		args.queue = false
+		BuildingHelper:RepairCommand(args)
+	end
 end
 
 function RepairAutocast(event)
-	local caster = event.caster
-	local ability = event.ability
-	local playerID = caster:GetPlayerOwnerID()
-	local radius = event.Radius
-	Timers:CreateTimer(function()
-		if caster.state == "idle" and ability and not ability:IsNull() and ability:GetAutoCastState() then
-			local units = FindUnitsInRadius(caster:GetTeamNumber(), caster:GetAbsOrigin() , nil, radius , DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_BUILDING , DOTA_UNIT_TARGET_FLAG_NONE, 0 , false)
-			for k,unit in pairs(units) do
-				if IsCustomBuilding(unit) and unit:GetHealthDeficit() > 0 and unit.state == "complete" then
-					BuildingHelper:AddRepairToQueue(caster, unit, true)
-					caster.state = "repairing"
-					break
+	if IsServer()
+		local caster = event.caster
+		local ability = event.ability
+		local playerID = caster:GetPlayerOwnerID()
+		local radius = event.Radius
+		Timers:CreateTimer(function()
+			if caster.state == "idle" and ability and not ability:IsNull() and ability:GetAutoCastState() then
+				local units = FindUnitsInRadius(caster:GetTeamNumber(), caster:GetAbsOrigin() , nil, radius , DOTA_UNIT_TARGET_TEAM_FRIENDLY, DOTA_UNIT_TARGET_BASIC + DOTA_UNIT_TARGET_BUILDING , DOTA_UNIT_TARGET_FLAG_NONE, 0 , false)
+				for k,unit in pairs(units) do
+					if IsCustomBuilding(unit) and unit:GetHealthDeficit() > 0 and unit.state == "complete" then
+						BuildingHelper:AddRepairToQueue(caster, unit, true)
+						caster.state = "repairing"
+						break
+					end
 				end
 			end
-		end
-		return 0.5
-	end)
+			return 0.5
+		end)
+	end
 end
 
 function GatherLumber(event)
-	local caster = event.caster
-    local target = event.target
-    local ability = event.ability
-    local target_class = target:GetClassname()
-    local pID = caster:GetPlayerOwnerID()
-    caster:Interrupt()
-    if target_class ~= "ent_dota_tree" then
-    	caster:Interrupt()
-    	return
-    end
-    
-    local tree = target
-
-
-    -- Check for empty tree for Wisps
-    if tree.builder ~= nil and tree.builder ~= caster then
-        SendErrorMessage(pID,"The tree is occupied!")
-        caster:Interrupt()
-        return
-    end
-
-    local tree_pos = tree:GetAbsOrigin()
-    local particleName = "particles/ui_mouseactions/ping_circle_static.vpcf"
-    local particle = ParticleManager:CreateParticleForPlayer(particleName, PATTACH_CUSTOMORIGIN, caster, caster:GetPlayerOwner())
-    ParticleManager:SetParticleControl(particle, 0, Vector(tree_pos.x, tree_pos.y, tree_pos.z+20))
-    ParticleManager:SetParticleControl(particle, 1, Vector(0,255,0))
-    Timers:CreateTimer(3, function() 
-        ParticleManager:DestroyParticle(particle, true)
-    end)
-
-    caster.target_tree = tree
-    ability.cancelled = false
-
-    tree.builder = caster
-
-    -- Fake toggle the ability, cancel if any other order is given
-    if not ability:GetToggleState() then
-    	ability:ToggleAbility()
-    end
-
-    -- Recieving another order will cancel this
-    -- ability:ApplyDataDrivenModifier(caster, caster, "modifier_on_order_cancel_lumber", {})
-    tree_pos.z = tree_pos.z - 28
-    caster:SetAbsOrigin(tree_pos)
-    tree.wisp_gathering = true
-    ability:ApplyDataDrivenModifier(caster, caster, "modifier_gathering_lumber", {})
-
-end
-
-function LumberGain( event )
-    local ability = event.ability
-    local caster = event.caster
-	local lumberGain = GetUnitKV(caster:GetUnitName(), "LumberAmount") * GameRules.MapSpeed
-	local lumberInterval = GetUnitKV(caster:GetUnitName(), "LumberInterval")
-	local playerID = caster:GetPlayerOwnerID()
-	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
-	ModifyLumberPerSecond(hero, lumberGain, lumberInterval)
-	local dataTable = { entityIndex = caster:GetEntityIndex(),
-							amount = lumberGain, interval = lumberInterval }
-	local player = hero:GetPlayerOwner()
-	if player then
-		CustomGameEventManager:Send_ServerToPlayer(player, "tree_wisp_harvest_start", dataTable)
+	if IsServer() then
+		local caster = event.caster
+		local target = event.target
+		local ability = event.ability
+		local target_class = target:GetClassname()
+		local pID = caster:GetPlayerOwnerID()
+		caster:Interrupt()
+		if target_class ~= "ent_dota_tree" then
+			caster:Interrupt()
+			return
+		end
+		local tree = target
+		-- Check for empty tree for Wisps
+		if tree.builder ~= nil and tree.builder ~= caster then
+			SendErrorMessage(pID,"The tree is occupied!")
+			caster:Interrupt()
+			return
+		end
+		local tree_pos = tree:GetAbsOrigin()
+		local particleName = "particles/ui_mouseactions/ping_circle_static.vpcf"
+		local particle = ParticleManager:CreateParticleForPlayer(particleName, PATTACH_CUSTOMORIGIN, caster, caster:GetPlayerOwner())
+		ParticleManager:SetParticleControl(particle, 0, Vector(tree_pos.x, tree_pos.y, tree_pos.z+20))
+		ParticleManager:SetParticleControl(particle, 1, Vector(0,255,0))
+		Timers:CreateTimer(3, function() 
+			ParticleManager:DestroyParticle(particle, true)
+		end)
+		caster.targeted_tree = event.target 
+		caster.target_tree = tree
+		ability.cancelled = false
+		tree.builder = caster
+		-- Fake toggle the ability, cancel if any other order is given
+		if not ability:GetToggleState() then
+			ability:ToggleAbility()
+		end
+		-- Recieving another order will cancel this
+		-- ability:ApplyDataDrivenModifier(caster, caster, "modifier_on_order_cancel_lumber", {})
+		tree_pos.z = tree_pos.z - 8--28
+		caster:SetAbsOrigin(tree_pos)
+		tree.wisp_gathering = true
+		ability:ApplyDataDrivenModifier(caster, caster, "modifier_gathering_lumber", {})
 	end
 end
-
+function LumberGain( event )
+	if IsServer() then
+		local ability = event.ability
+		local caster = event.caster
+		local lumberGain = GetUnitKV(caster:GetUnitName(), "LumberAmount") * GameRules.MapSpeed
+		local lumberInterval = GetUnitKV(caster:GetUnitName(), "LumberInterval")
+		local playerID = caster:GetPlayerOwnerID()
+		local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+		ModifyLumberPerSecond(hero, lumberGain, lumberInterval)
+		local dataTable = { entityIndex = caster:GetEntityIndex(), amount = lumberGain, interval = lumberInterval } --statusAnim = GameRules.PlayersFPS[playerID] ??
+		local player = hero:GetPlayerOwner()
+		if player then
+			CustomGameEventManager:Send_ServerToPlayer(player, "tree_wisp_harvest_start", dataTable)
+		end
+	end
+end
 function ModifyLumberPerSecond(hero, amount, interval) 
 	hero.lumberPerSecond = hero.lumberPerSecond + (amount/interval)
 end
-
 function CancelGather(event)
-
-	DebugPrint("Cancel gather---------------------------------------------------------------------")
-  	local caster = event.caster
-    local ability = event.ability
-
-    caster:RemoveModifierByName("modifier_gathering_lumber")
-
-    ability.cancelled = true
-    caster.state = "idle"
-
-    local tree = caster.target_tree
-    if tree then
-        caster.target_tree = nil
-        tree.builder = nil
-    end
-    if ability:GetToggleState() then
-    	ability:ToggleAbility()
-    end
-    -- Give 1 extra second of fly movement
-    caster:SetMoveCapability(DOTA_UNIT_CAP_MOVE_FLY)
-    Timers:CreateTimer(0.03,function() 
-        caster:SetMoveCapability(DOTA_UNIT_CAP_MOVE_GROUND)
-        caster:AddNewModifier(caster, nil, "modifier_phased", {duration=0.03})
-	end)
-	local lumberGain = GetUnitKV(caster:GetUnitName(), "LumberAmount") * GameRules.MapSpeed
-	local lumberInterval = GetUnitKV(caster:GetUnitName(), "LumberInterval")
-    local playerID = caster:GetPlayerOwnerID()
-	local hero = PlayerResource:GetSelectedHeroEntity(playerID)
-	ModifyLumberPerSecond(hero, -lumberGain, lumberInterval)
-	local dataTable = { entityIndex = caster:GetEntityIndex() }
-	local player = hero:GetPlayerOwner()
-	if player then
-		CustomGameEventManager:Send_ServerToPlayer(player, "tree_wisp_harvest_stop", dataTable)
+	if IsServer() then
+		DebugPrint("Cancel gather---------------------------------------------------------------------")
+		local caster = event.caster
+		local ability = event.ability
+		caster:RemoveModifierByName("modifier_gathering_lumber")
+		ability.cancelled = true
+		caster.state = "idle"
+		local tree = caster.target_tree
+		if tree then
+			caster.target_tree = nil
+			tree.builder = nil
+		end
+		if ability:GetToggleState() then
+			ability:ToggleAbility()
+		end
+		-- Give 1 extra second of fly movement
+		caster:SetMoveCapability(DOTA_UNIT_CAP_MOVE_FLY)
+		Timers:CreateTimer(0.03,function() 
+			caster:SetMoveCapability(DOTA_UNIT_CAP_MOVE_GROUND)
+			caster:AddNewModifier(caster, nil, "modifier_phased", {duration=0.03})
+		end)
+		local lumberGain = GetUnitKV(caster:GetUnitName(), "LumberAmount") * GameRules.MapSpeed
+		local lumberInterval = GetUnitKV(caster:GetUnitName(), "LumberInterval")
+		local playerID = caster:GetPlayerOwnerID()
+		local hero = PlayerResource:GetSelectedHeroEntity(playerID)
+		ModifyLumberPerSecond(hero, -lumberGain, lumberInterval)
+		local dataTable = { entityIndex = caster:GetEntityIndex() }
+		local player = hero:GetPlayerOwner()
+		if player then
+			CustomGameEventManager:Send_ServerToPlayer(player, "tree_wisp_harvest_stop", dataTable)
+		end
 	end
 end
-
-
-function GoldMineCreate(keys)
-	local caster = keys.caster
-	local hero = caster:GetOwner()
-	local amountPerSecond = GetUnitKV(caster:GetUnitName()).GoldAmount * GameRules.MapSpeed
-	local maxGold = GetUnitKV(caster:GetUnitName(),"MaxGold") or 2000000
-	hero.goldPerSecond = hero.goldPerSecond + amountPerSecond
-	local secondsToLive = maxGold/amountPerSecond;
-	caster.destroyTimer = Timers:CreateTimer(secondsToLive,
-		function()
-			caster:ForceKill(false)
+function UpgradeWisp(event)
+	if IsServer() then
+		local caster = event.caster
+		local target = caster.targeted_tree
+		local ability = event.ability
+		local unit_name = GetAbilityKV(ability:GetAbilityName()).UnitName
+		local point = caster:GetAbsOrigin()
+		local pID = caster:GetPlayerOwnerID()
+		local hero = PlayerResource:GetSelectedHeroEntity(pID)
+		local casterAbility = caster:FindAbilityByName("gather_lumber")
+		local gold_cost = ability:GetSpecialValueFor("gold_cost")
+		local lumber_cost = ability:GetSpecialValueFor("lumber_cost")
+		if PlayerResource:GetGold(pID) < gold_cost then
+            SendErrorMessage(pID, "error_not_enough_gold")
+			if casterAbility ~= nil then
+				caster:CastAbilityOnTarget(target, casterAbility, pID)
+			end
+            return false
+        end
+        if PlayerResource:GetLumber(pID) < lumber_cost then
+            SendErrorMessage(pID, "error_not_enough_lumber")
+			if casterAbility ~= nil then
+				caster:CastAbilityOnTarget(target, casterAbility, pID)
+			end
+            return false
+        end
+		if hero.wisp > GameRules.maxWisp and wisp ~= 0 then
+			SendErrorMessage(pID, "error_not_enough_wisp")
+			caster:AddNewModifier(nil, nil, "modifier_stunned", {duration=0.03})
+			if casterAbility ~= nil then
+				caster:CastAbilityOnTarget(target, casterAbility, pID)
+			end
+			return false
+		end
+		caster:ForceKill(true) --This will call RemoveBuilding --why??
+		--[[
+		caster:Kill(nil, caster)
+		Timers:CreateTimer(10,function()
+			UTIL_Remove(caster)
 		end)
-	local dataTable = { entityIndex = caster:GetEntityIndex(), amount = amountPerSecond, interval = 1 }
-	local player = hero:GetPlayerOwner()
-	if player then
-		CustomGameEventManager:Send_ServerToPlayer(player, "gold_gain_start", dataTable)
+		]]
+		PlayerResource:ModifyGold(hero,-gold_cost)
+		PlayerResource:ModifyLumber(hero,-lumber_cost)
+		local unit = CreateUnitByName(unit_name, point , true, nil, nil, hero:GetTeamNumber())
+		unit:SetOwner(hero)
+		unit:SetControllableByPlayer(pID, true)
+		PlayerResource:NewSelection(pID, unit)
+		Timers:CreateTimer(0.3,function() 
+			local targetAbility = unit:FindAbilityByName("gather_lumber")
+			if targetAbility ~= nil then
+				unit:CastAbilityOnTarget(target, targetAbility, pID)
+			end
+		end)
+		table.insert(hero.units,unit)
+	end
+end
+function GoldMineCreate(keys)
+	if IsServer() then
+		local caster = keys.caster
+		local hero = caster:GetOwner()
+		local amountPerSecond = GetUnitKV(caster:GetUnitName()).GoldAmount * GameRules.MapSpeed
+		local maxGold = GetUnitKV(caster:GetUnitName(),"MaxGold") or 2000000
+		hero.goldPerSecond = hero.goldPerSecond + amountPerSecond
+		local secondsToLive = maxGold/amountPerSecond;
+		caster.destroyTimer = Timers:CreateTimer(secondsToLive,
+			function()
+				caster:ForceKill(false)
+			end)
+		local dataTable = { entityIndex = caster:GetEntityIndex(), amount = amountPerSecond, interval = 1 }
+		local player = hero:GetPlayerOwner()
+		if player then
+			CustomGameEventManager:Send_ServerToPlayer(player, "gold_gain_start", dataTable)
+		end
 	end
 end
 
@@ -381,8 +448,6 @@ function HpRegenDestroy(keys)
 	keys.Amount = keys.Amount * (-1)
 	HpRegenModifier(keys)
 end
-
-
 
 function BuyItem(event)
 	local ability = event.ability
