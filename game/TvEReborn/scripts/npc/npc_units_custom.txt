@@ -1501,7 +1501,7 @@
 		"Ability3"					""
 		"Ability4"					""
 		"Ability10"					""
-	    "ArmorPhysical"             "16"
+	    "ArmorPhysical"             "20"
 		"StatusHealth"              "40960"
 	    "StatusHealthRegen"         "0"
 	    "StatusMana"                "0"
@@ -1552,7 +1552,7 @@
 		"Ability3"					""
 		"Ability4"					""
 		"Ability10"					""
-	    "ArmorPhysical"             "24"
+	    "ArmorPhysical"             "32"
 		"StatusHealth"              "81920"
 	    "StatusHealthRegen"         "0"
 	    "StatusMana"                "0"
@@ -1609,7 +1609,7 @@
 		"Ability3"					""
 		"Ability4"					""
 		"Ability10"					""
-	    "ArmorPhysical"             "32"
+	    "ArmorPhysical"             "44"
 		"StatusHealth"              "163840"
 	    "StatusHealthRegen"         "0"
 	    "StatusMana"                "0"
@@ -2828,6 +2828,16 @@
 	            "6" { "ItemDef" "4562" }
 	        }
 	    }
+      	"Upgrades"{
+	        "Count"     "1"
+	        "1"{
+				"unit_name"			"tower_14"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+		"Requirements"{
+		}
 		"Requirements"{
 		}
 		"AbilityLayout"				"4"
@@ -2867,6 +2877,1176 @@
 	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
 	    "MovementSpeed"             "0"
 	}
+  	"tower_14"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/vengeful/vengeful.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/vengeful/vengeful.vmdl"
+			"particle"     				"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "14"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "441" }
+	            "2" { "ItemDef" "442" }
+	            "3" { "ItemDef" "445" }
+	            "4" { "ItemDef" "447" }
+	            "5" { "ItemDef" "517" }
+	        }
+	    }
+
+	    "Upgrades"
+	    {
+	        "Count"     "2"
+	        "1"{
+				"unit_name"			"tower_15"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+			"2"{
+				"unit_name"			"tower_14_1"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		"Requirements"{
+			"research_lab_2"				"1"
+		}
+    "tower_14_1"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/vengeful/vengeful.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/vengeful/vengeful.vmdl"
+			"particle"     				"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "14"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "14322" }
+	            "2" { "ItemDef" "14321" }
+	            "3" { "ItemDef" "14320" }
+	            "4" { "ItemDef" "14319" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"venge_range_boost_datadriven"
+		"Ability3"					""  
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_VengefulSpirit"
+
+
+		"AttackDamageMin"			"999999"		// Damage range min.
+		"AttackDamageMax"			"999999"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"dragon_blood_datadriven"
+		"Ability3"					""
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_VengefulSpirit"
+
+
+		"AttackDamageMin"			"600100"		// Damage range min.
+		"AttackDamageMax"			"600100"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+      "tower_14_2"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/vengeful/vengeful.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/vengeful/vengeful.vmdl"
+			"particle"     				"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "14"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "14322" }
+	            "2" { "ItemDef" "14321" }
+	            "3" { "ItemDef" "14320" }
+	            "4" { "ItemDef" "14319" }
+	        }
+	    }
+      	    "Upgrades"
+	    {
+	        "Count"     "1"
+			}
+			"1"{
+				"unit_name"			"tower_14_2"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		"Requirements"{
+		}
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"venge_range_boost_datadriven"
+		"Ability3"					""  
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_VengefulSpirit"
+
+
+		"AttackDamageMin"			"999999"		// Damage range min.
+		"AttackDamageMax"			"999999"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"dragon_blood_datadriven"
+		"Ability3"					""
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_vengeful/vengeful_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_VengefulSpirit"
+
+
+		"AttackDamageMin"			"600000"		// Damage range min.
+		"AttackDamageMax"			"600000"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	"tower_15"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/shadow_fiend/shadow_fiend.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/shadow_fiend/shadow_fiend.vmdl"
+			"particle"     				"particles/units/heroes/hero_nevermore/nevermore_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "15"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "387" }
+	            "2" { "ItemDef" "486" }
+	            "3" { "ItemDef" "488" }
+	            "4" { "ItemDef" "509" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+	    "Upgrades"
+	    {
+	        "Count"     "1"
+			"1"
+      {
+				"unit_name"			"tower_15_1"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"nevermore_dark_lord_datadriven"
+		"Ability3"					""
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_nevermore/nevermore_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_Nevermore"
+
+
+		"AttackDamageMin"			"700000"		// Damage range min.
+		"AttackDamageMax"			"700000"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	   	"VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+	"tower_15_1"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/shadow_fiend/shadow_fiend.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/shadow_fiend/shadow_fiend.vmdl"
+			"particle"     				"particles/units/heroes/hero_nevermore/nevermore_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "15"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "387" }
+	            "2" { "ItemDef" "486" }
+	            "3" { "ItemDef" "488" }
+	            "4" { "ItemDef" "509" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		"Upgrades"
+	    {
+	        "Count"     "1"
+			"1"{
+				"unit_name"			"tower_15_2"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"nevermore_dark_lord_datadriven_2"
+		"Ability3"					""
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_nevermore/nevermore_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_Nevermore"
+
+
+		"AttackDamageMin"			"700000"		// Damage range min.
+		"AttackDamageMax"			"700000"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+	"tower_15_2"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/shadow_fiend/shadow_fiend.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/shadow_fiend/shadow_fiend.vmdl"
+			"particle"     				"particles/units/heroes/hero_nevermore/nevermore_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "15"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "387" }
+	            "2" { "ItemDef" "486" }
+	            "3" { "ItemDef" "488" }
+	            "4" { "ItemDef" "509" }
+	        }
+	    }
+
+		"Requirements"{
+
+		}
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"nevermore_dark_lord_datadriven_2"
+		"Ability3"					""
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_nevermore/nevermore_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_Nevermore"
+
+
+		"AttackDamageMin"			"999999"		// Damage range min.
+		"AttackDamageMax"			"999999"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+	"tower_16"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/beastmaster/beastmaster.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/beastmaster/beastmaster.vmdl"
+			"particle"     				"particles/units/heroes/hero_beastmaster/beastmaster_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "17"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "4387" }
+	            "2" { "ItemDef" "4694" }
+	            "3" { "ItemDef" "4645" }
+				"4" { "ItemDef" "4693" }
+				"5" { "ItemDef" "4690" }
+				"6" { "ItemDef" "4691" }
+				"7" { "ItemDef" "4692" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		"Upgrades"
+	    {
+	        "Count"     "1"
+			"1"{
+				"unit_name"			"tower_16_1"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"mirana_star_blessing_datadriven"
+		"Ability3"					"phantom_assassin_coup_de_grace_datadriven"
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_mirana/mirana_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_TemplarAssassin"
+
+
+		"AttackDamageMin"			"900000"		// Damage range min.
+		"AttackDamageMax"			"900000"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+	"tower_16_1"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/beastmaster/beastmaster.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/beastmaster/beastmaster.vmdl"
+			"particle"     				"particles/units/heroes/hero_beastmaster/beastmaster_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "17"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "4387" }
+	            "2" { "ItemDef" "4694" }
+	            "3" { "ItemDef" "4645" }
+				"4" { "ItemDef" "4693" }
+				"5" { "ItemDef" "4690" }
+				"6" { "ItemDef" "4691" }
+				"7" { "ItemDef" "4692" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		"Upgrades"
+	    {
+	        "Count"     "1"
+			"1"{
+				"unit_name"			"tower_16_2"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"mirana_star_blessing_datadriven"
+		"Ability3"					"phantom_assassin_coup_de_grace_datadriven"
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_mirana/mirana_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_TemplarAssassin"
+
+
+		"AttackDamageMin"			"900000"		// Damage range min.
+		"AttackDamageMax"			"900000"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+	"tower_16_2"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/beastmaster/beastmaster.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/beastmaster/beastmaster.vmdl"
+			"particle"     				"particles/units/heroes/hero_beastmaster/beastmaster_base_attack.vpcf"
+	    }
+		"ModelScale"                "1"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "17"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "4387" }
+	            "2" { "ItemDef" "4694" }
+	            "3" { "ItemDef" "4645" }
+				"4" { "ItemDef" "4693" }
+				"5" { "ItemDef" "4690" }
+				"6" { "ItemDef" "4691" }
+				"7" { "ItemDef" "4692" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"mirana_star_blessing_datadriven"
+		"Ability3"					"phantom_assassin_coup_de_grace_datadriven"
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_mirana/mirana_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_TemplarAssassin"
+
+
+		"AttackDamageMin"			"900000"		// Damage range min.
+		"AttackDamageMax"			"900000"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+	}
+  	"tower_17"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/luna/luna.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/luna/luna.vmdl"
+			"particle"     				"particles/units/heroes/hero_luna/luna_base_attack.vpcf"
+	    }
+		"ModelScale"                "0.8"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "17"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "448" }
+	            "2" { "ItemDef" "449" }
+	            "3" { "ItemDef" "450" }
+	            "4" { "ItemDef" "451" }
+	            "5" { "ItemDef" "452" }
+	            "6" { "ItemDef" "453" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		"Upgrades"
+	    {
+	        "Count"     "1"
+			"1"{
+				"unit_name"			"tower_17_1"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"phantom_assassin_coup_de_grace_datadriven"
+		"Ability3"					"luna_lunar_blessing_datadriven" //luna_moon_glaive2_datadriven
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_luna/luna_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_Luna"
+
+
+		"AttackDamageMin"			"900100"		// Damage range min.
+		"AttackDamageMax"			"900100"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+  }
+  	"tower_17_1"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/luna/luna.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/luna/luna.vmdl"
+			"particle"     				"particles/units/heroes/hero_luna/luna_base_attack.vpcf"
+	    }
+		"ModelScale"                "0.8"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "17"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "448" }
+	            "2" { "ItemDef" "449" }
+	            "3" { "ItemDef" "450" }
+	            "4" { "ItemDef" "451" }
+	            "5" { "ItemDef" "452" }
+	            "6" { "ItemDef" "453" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		"Upgrades"
+	    {
+	        "Count"     "1"
+			"1"{
+				"unit_name"			"tower_17_2"
+				"gold_cost"			"999999"
+				"lumber_cost"		"999999"
+			}
+	    }
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"phantom_assassin_coup_de_grace_datadriven"
+		"Ability3"					"luna_lunar_blessing_datadriven" //luna_moon_glaive2_datadriven
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_luna/luna_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_Luna"
+
+
+		"AttackDamageMin"			"900100"		// Damage range min.
+		"AttackDamageMax"			"900100"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+  }
+  	"tower_17_2"
+	{
+	    // Visual
+	    //-----------------------------
+		"BaseClass"                 "npc_dota_creature"
+		"Model"						"models/heroes/luna/luna.vmdl"
+	    "precache"
+		{
+			"model"						"models/heroes/luna/luna.vmdl"
+			"particle"     				"particles/units/heroes/hero_luna/luna_base_attack.vpcf"
+	    }
+		"ModelScale"                "0.8"
+	    "ModelRotation"             "90"
+		"HealthBarOffset"			"150"
+		"PlayerCanControl"			"1"
+		"Scale"						"1"
+		"DisableTurning"			"0"
+
+	    // Stats
+	    //-----------------------------
+	    "Level"                     "17"
+	    "BuildTime"                 "3"
+
+		"Creature"
+	    {
+	        "AttachWearables" // Dark wood set
+	        {
+	            "1" { "ItemDef" "448" }
+	            "2" { "ItemDef" "449" }
+	            "3" { "ItemDef" "450" }
+	            "4" { "ItemDef" "451" }
+	            "5" { "ItemDef" "452" }
+	            "6" { "ItemDef" "453" }
+	        }
+	    }
+
+		"Requirements"{
+		}
+
+		// Abilities
+		//----------------------------------------------------------------
+		"AbilityLayout"				"4"
+		"Ability1"					"tower_atk_spd"
+		"Ability2"					"phantom_assassin_coup_de_grace_datadriven"
+		"Ability3"					"luna_lunar_blessing_datadriven" //luna_moon_glaive2_datadriven
+		"Ability4"					""
+		"Ability10"					""
+
+	    // General
+	    //-----------------------------
+
+
+		"AttackCapabilities"		"DOTA_UNIT_CAP_RANGED_ATTACK"
+		"AttackDamageType"			"DAMAGE_TYPE_ArmorPhysical"
+		"AttackRate"				"1.00"			// Speed of attack.
+		"AttackAnimationPoint"		"0.0"		// Normalized time in animation cycle to attack.
+		"AttackAcquisitionRange"	"800"		// Range within a target can be acquired.
+		"AttackRange"				"600"		// Range within a target can be attacked.
+		"ProjectileModel"			"particles/units/heroes/hero_luna/luna_base_attack.vpcf"		// Particle system model for projectile.
+		"ProjectileSpeed"			"1250"		// Speed of projectile.
+		"SoundSet"					"Hero_Luna"
+
+
+		"AttackDamageMin"			"900100"		// Damage range min.
+		"AttackDamageMax"			"900100"		// Damage range max.
+	    "ArmorPhysical"             "64"//"128"
+		"StatusHealth"              "45000"
+	    "StatusHealthRegen"         "0"
+	    "StatusMana"                "0"
+	    "StatusManaRegen"           "0"
+	    "MagicalResistance"         "0"
+
+		"ConstructionSize"          "2"
+	    "BlockPathingSize"          "2"
+		"CollisionSize"				"64"
+
+	    "BoundsHullName"            "DOTA_HULL_SIZE_BUILDING"
+	    "TeamName"                  "DOTA_TEAM_NEUTRALS"
+	    "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_HERO"
+	    "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_BUILDING"
+	    "VisionDaytimeRange"        "650"
+	    "VisionNighttimeRange"      "650"
+	    "ProjectileCollisionSize"   "100"
+	    "RingRadius"                "100"
+	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+	    "MovementSpeed"             "0"
+  }
 	"true_sight_tower"{
 		"BaseClass"                 "npc_dota_creature"
 	    "Model"                     "models/true_sight_tower.vmdl"
@@ -2910,6 +4090,7 @@
 	    "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
 	    "MovementSpeed"             "0"
 	}
+  
 	//BASE_BUILDINGS
 	"trader_1"{
 		"BaseClass"                 "npc_dota_creature"
